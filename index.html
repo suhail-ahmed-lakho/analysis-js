@@ -1,280 +1,742 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Store Dashboard</title>
+    <title>Analytics</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
+            background-color: #f8f9fa;
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f0f0f0;
         }
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-        .card {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
-        .card-title {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .card-value {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        .card-change {
+       
+        
+      
+        .chart-legend {
             font-size: 12px;
             color: #666;
         }
-        canvas {
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            margin-right: 8px;
+            border-radius: 2px;
+        }
+        .container {
             max-width: 100%;
-            height: auto;
+            margin: 20px auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
         }
-        .btn-custom {
-            background-color: #f8f9fa;
-            border: 1px solid #ced4da;
-            color: #000000;
+        .list-group-item {
+            border: none;
+            padding: 15px 20px;
+            font-size: 16px;
+        }
+        .list-group-item i {
+            margin-right: 10px;
+        }
+        .analytics-header {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .analytics-section {
+            background-color: #f1f3f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .analytics-section .btn {
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .total-sales {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .chart {
+            height: 200px;
+            background-color: #e9ecef;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
             font-size: 14px;
         }
-        .btn-custom i {
-            margin-right: 5px;
+        @media (max-width: 576px) {
+            .container {
+                padding: 15px;
+            }
+            .analytics-header {
+                font-size: 16px;
+            }
+            .total-sales {
+                font-size: 20px;
+            }
+            .chart {
+                height: 150px;
+                font-size: 12px;
+            }
+            .btn {
+                font-size: 12px;
+                padding: 8px;
+            }
         }
-        .compare-input {
-            border: 1px solid #ced4da;
-            padding: 5px 10px;
-            border-radius: 5px;
+
+    
+        .chart-container {
+            width: 50%;
+            margin: 0 auto;
+            padding-top: 20px;
+        }
+        .chart-title {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .chart-subtitle {
+            color: #888;
+            font-size: 0.8em;
+        }
+        @media (max-width: 576px) {
+            .chart-container {
+                width: 90%;
+            }
+        }
+        .conversion-rate {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .session-info {
             font-size: 14px;
+            color: #666;
         }
-        .form-check-label {
+        .percentage {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .divider {
+            border-top: 1px solid #e0e0e0;
+            margin: 10px 0;
+        }
+        @media (max-width: 576px) {
+            .conversion-rate {
+                font-size: 20px;
+            }
+            .percentage {
+                font-size: 14px;
+            }
+        }
+        .chart-container {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .bar {
+            transition: fill 0.3s, transform 0.3s;
+        }
+        .bar:hover {
+            fill: #ffcc00;
+            transform: scale(1.05);
+        }
+        .y-axis-label {
             font-size: 14px;
+            fill: #666;
         }
-        .form-check-input {
-            margin-top: 0.3rem;
+        .bar-label {
+            font-size: 12px;
+            fill: #333;
+        }
+        .grid-line {
+            stroke: #e0e0e0;
+            stroke-dasharray: 5, 5;
+        }
+        @media (max-width: 600px) {
+            .y-axis-label {
+                font-size: 12px;
+            }
+            .bar-label {
+                font-size: 10px;
+            }
         }
     </style>
 </head>
 <body>
-
     <div class="container">
-        <h5 class="text-center">Analytics</h5>
-        <div class="d-flex flex-column align-items-start">
-            <button class="btn btn-custom mb-2" data-bs-toggle="tooltip" data-bs-placement="right" title="Generate a report">
-                <i class="fas fa-file-alt"></i> Report
-                <i class="fas fa-chevron-right float-end"></i>
-            </button>
-
-            <button class="btn btn-custom mb-2" data-bs-toggle="tooltip" data-bs-placement="right" title="View live analytics">
-                <i class="fas fa-broadcast-tower"></i> Live View
-                <i class="fas fa-chevron-right float-end"></i>
-            </button>
+        <div class="list-group">
+            <a href="#" class="list-group-item d-flex justify-content-between align-items-center">
+                <span><i class="fas fa-chart-line"></i> Reports</span>
+                <i class="fas fa-chevron-right"></i>
+            </a>
+            <a href="#" class="list-group-item d-flex justify-content-between align-items-center">
+                <span><i class="fas fa-wifi"></i> Live View</span>
+                <i class="fas fa-chevron-right"></i>
+            </a>
         </div>
+        <div class="analytics-header">Analytics</div>
+        <div class="analytics-section">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+                <button class="btn btn-light mb-2 mb-sm-0">Last 12 months</button>
+                <button class="btn btn-light mb-2 mb-sm-0">Compare to: Nov 1, 2022–Oct 31, 2023</button>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="autoRefresh">
+                <label class="form-check-label" for="autoRefresh">
+                    Auto-refresh
+                </label>
+            </div>
+        </div>
+        <!-- <div class="total-sales">Total sales</div>
+        <div class="total-sales">$7,725.67 –</div>
+        <div class="text-muted">SEK</div>
+        <div class="chart">
+            <span>Chart Placeholder</span>
+        </div>
+        <div class="text-muted mt-2">
+            <small>Nov 1, 2023–Oct 31, 2024</small>
+            <small class="float-end">Nov 1, 2022–Oct 31, 2023</small>
+        </div> -->
+    </div>
+
+    <div class="chart-container mt-4">
+        <div class="chart-title">Sales by channel</div>
+        <div class="chart-subtitle">A comparison of sales across different channels</div>
+        <canvas id="salesChart"></canvas>
+    </div>
+
+    <!-- <div class="container ">
     
-        <h5 class="mt-4">Analytics Overview</h5>
-        <div class="d-flex align-items-center mb-3">
-            <button class="btn btn-custom me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="View last 30 days data">
-                <i class="fas fa-calendar-alt"></i> Last 30 days
-            </button>
-            <input type="text" class="compare-input" value="Compare to: sep 14-13,2024" readonly>
+    
+        <div class="total-sales">Online Store Sessions</div>
+        <div class="total-sales">$54,196 –</div>
+        <div class="text-muted">SEK</div>
+        <div class="chart">
+            <span>Chart Placeholder</span>
         </div>
-        <div class="form-check mb-3">
-            <input class="form-check-input" type="checkbox" id="autoRefresh">
-            <label class="form-check-label" for="autoRefresh">Auto-refresh</label>
+        <div class="text-muted mt-2">
+            <small>Nov 20, 2023–Oct 31, 2024</small>
+            <small class="float-end">Feb-2, 2024–Apr 31, 2024</small>
+        </div>
+    </div> -->
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="conversion-rate">Online store conversion rate</div>
+                <div class="conversion-rate">0.34%</div>
+                <div class="divider"></div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div>Added to cart</div>
+                        <div class="session-info">2,519 sessions</div>
+                    </div>
+                    <div class="percentage">4.65%</div>
+                </div>
+                <div class="divider"></div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div>Reached checkout</div>
+                        <div class="session-info">1,301 sessions</div>
+                    </div>
+                    <div class="percentage">2.40%</div>
+                </div>
+                <div class="divider"></div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div>Sessions converted</div>
+                        <div class="session-info">186 sessions</div>
+                    </div>
+                    <div class="percentage">0.34%</div>
+                </div>
+                <div class="divider"></div>
+            </div>
         </div>
     </div>
-    <div class="dashboard row">
-        <div class="card col-12">
-            <div class="card-title">Total Orders</div>
-            <div class="card-value">1</div>
-            <div class="card-change">↓ 6% from previous period</div>
-            <canvas id="totalOrdersChart"></canvas>
+
+
+  
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="chart-container">
+                <div class="chart-title">Total orders</div>
+                <div class="chart-value">196</div>
+                <canvas id="ordersChart"></canvas>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #1f77b4;"></div>
+                        Nov 1, 2023 - Oct 31, 2024
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #ff7f0e;"></div>
+                        Nov 1, 2022 - Oct 31, 2023
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="card col-12">
-            <div class="card-title">Online Store Sessions</div>
-            <div class="card-value">1,569</div>
-            <div class="card-change">↓ 6% from previous period</div>
+      
+    <div class="col-md-6 mb-4">
+        <div class="chart-container">
+            <div class="chart-title">Total Revenue</div>
+            <div class="chart-value">$12,345</div>
+            <canvas id="revenueChart"></canvas>
+            <div class="chart-legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #1f77b4;"></div>
+                    Nov 1, 2023 - Oct 31, 2024
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #ff7f0e;"></div>
+                    Nov 1, 2022 - Oct 31, 2023
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="chart-container">
+            <div class="chart-title">Total Visitors</div>
+            <div class="chart-value">5,678</div>
+            <canvas id="visitorsChart"></canvas>
+            <div class="chart-legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #1f77b4;"></div>
+                    Nov 1, 2023 - Oct 31, 2024
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #ff7f0e;"></div>
+                    Nov 1, 2022 - Oct 31, 2023
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="chart-container">
+            <div class="chart-title">Total Sessions</div>
+            <div class="chart-value">3,456</div>
             <canvas id="sessionsChart"></canvas>
-        </div>
-        <div class="card col-12">
-            <div class="card-title">Sales by Channel</div>
-            <div class="card-value">$150</div>
-            <canvas id="salesChannelChart"></canvas>
-        </div>
-        <div class="card col-12">
-            <div class="card-title">Total Sales</div>
-            <div class="card-value">$42.00</div>
-            <div class="card-change">↓ 50% from previous period</div>
-            <canvas id="totalSalesChart"></canvas>
-        </div>
-        <div class="card col-12">
-            <div class="card-title">Average Order Value</div>
-            <div class="card-value">$42.00</div>
-            <div class="card-change">↓ 50% from previous period</div>
-            <canvas id="avgOrderChart"></canvas>
+            <div class="chart-legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #1f77b4;"></div>
+                    Nov 1, 2023 - Oct 31, 2024
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #ff7f0e;"></div>
+                    Nov 1, 2022 - Oct 31, 2023
+                </div>
+            </div>
         </div>
     </div>
+</div>
+<div class="container mt-5">
+    <h4 class="text-center">Top Selling Products</h4>
+    <div class="chart-container">
+        <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid meet">
+            <!-- Y-axis labels -->
+            <g>
+                <text class="y-axis-label" x="10" y="70">200</text>
+                <text class="y-axis-label" x="10" y="170">100</text>
+                <text class="y-axis-label" x="10" y="270">0</text>
+                <text class="y-axis-label" x="10" y="20" font-weight="bold">Sales</text> <!-- Y-axis title -->
+            </g>
+            <!-- Grid Lines -->
+            <g class="grid">
+                <line class="grid-line" x1="50" y1="250" x2="550" y2="250"></line>
+                <line class="grid-line" x1="50" y1="150" x2="550" y2="150"></line>
+                <line class="grid-line" x1="50" y1="50" x2="550" y2="50"></line>
+            </g>
+            <!-- Bars -->
+            <g transform="translate(50, 20)">
+                <rect class="bar" x="0" y="50" width="50" height="200" fill="#1f77b4" style="opacity: 0;"></rect>
+                <text class="bar-label" x="25" y="270" text-anchor="middle">Solithra</text>
+                <text class="bar-label" x="25" y="40" text-anchor="middle" fill="#1f77b4">200</text> <!-- Sales value -->
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                <rect class="bar" x="100" y="150" width="50" height="100" fill="#ff7f0e" style="opacity: 0;"></rect>
+                <text class="bar-label" x="125" y="270" text-anchor="middle">Alyve</text>
+                <text class="bar-label" x="125" y="140" text-anchor="middle" fill="#ff7f0e">100</text> <!-- Sales value -->
+
+                <rect class="bar" x="200" y="100" width="50" height="150" fill="#2ca02c" style="opacity: 0;"></rect>
+                <text class="bar-label" x="225" y="270" text-anchor="middle">Tiesernet</text>
+                <text class="bar-label" x="225" y="90" text-anchor="middle" fill="#2ca02c">150</text> <!-- Sales value -->
+            </g>
+            <!-- X-axis line -->
+            <line x1="50" y1="250" x2="550" y2="250" stroke="black"></line>
+            <text x="300" y="280" text-anchor="middle">Products</text> <!-- X-axis title -->
+        </svg>
+    </div>
+</div>
+
     <script>
-        const labels = ['Oct 14', 'Oct 19', 'Oct 24', 'Oct 29', 'Nov 3', 'Nov 8'];
-        const lineOptions = {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'top',
-                },
+        var ctx = document.getElementById('salesChart').getContext('2d');
+        var salesChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Online Store', 'BOGO+'],
+                datasets: [{
+                    label: 'Sales',
+                    data: [8000, 200],
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)'
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)'
+                    ],
+                    borderWidth: 1
+                }]
             },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                },
-            },
-        };
-
-        const barOptions = {
-            responsive: true,
-            plugins: {
-                legend: {
-                    display: false,
-                },
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                },
-            },
-        };
-
-        // Total Orders Chart
-        new Chart(document.getElementById('totalOrdersChart'), {
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value + 'K';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+    <script>
+        var ctx = document.getElementById('ordersChart').getContext('2d');
+        var ordersChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: labels,
+                labels: ['Nov 2023', 'Feb 2024', 'May 2024', 'Aug 2024'],
                 datasets: [
                     {
-                        label: 'Current Period',
-                        data: [0, 0, 1, 0, 0, 0],
-                        borderColor: 'rgb(53, 162, 235)',
-                        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+                        label: 'Nov 1, 2023 - Oct 31, 2024',
+                        data: [0, 100, 0, 10],
+                        borderColor: '#1f77b4',
+                        backgroundColor: 'rgba(31, 119, 180, 0.2)',
+                        fill: false,
+                        tension: 0.4
                     },
                     {
-                        label: 'Previous Period',
-                        data: [0, 0, 0.4, 0, 0.5, 0],
-                        borderColor: 'rgb(53, 162, 235)',
-                        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+                        label: 'Nov 1, 2022 - Oct 31, 2023',
+                        data: [0, 0, 0, 0],
+                        borderColor: '#ff7f0e',
+                        backgroundColor: 'rgba(255, 127, 14, 0.2)',
+                        fill: false,
                         borderDash: [5, 5],
-                    },
-                ],
+                        tension: 0.4
+                    }
+                ]
             },
-            options: lineOptions,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 200,
+                        title: {
+                            display: true,
+                            text: 'Orders'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Time'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    </script>
+    <script>
+        var ctx = document.getElementById('revenueChart').getContext('2d');
+        var revenueChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Nov 2023', 'Feb 2024', 'May 2024', 'Aug 2024'],
+                datasets: [
+                    {
+                        label: 'Nov 1, 2023 - Oct 31, 2024',
+                        data: [5000, 7000, 6000, 8000],
+                        borderColor: '#1f77b4',
+                        backgroundColor: 'rgba(31, 119, 180, 0.2)',
+                        fill: false,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Nov 1, 2022 - Oct 31, 2023',
+                        data: [3000, 4000, 3500, 4500],
+                        borderColor: '#ff7f0e',
+                        backgroundColor: 'rgba(255, 127, 14, 0.2)',
+                        fill: false,
+                        borderDash: [5, 5],
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Revenue ($)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Time'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    </script>
+    <script>
+        var ctx = document.getElementById('visitorsChart').getContext('2d');
+        var visitorsChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Nov 2023', 'Feb 2024', 'May 2024', 'Aug 2024'],
+                datasets: [
+                    {
+                        label: 'Nov 1, 2023 - Oct 31, 2024',
+                        data: [2000, 2500, 3000, 3500],
+                        borderColor: '#1f77b4',
+                        backgroundColor: 'rgba(31, 119, 180, 0.2)',
+                        fill: false,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Nov 1, 2022 - Oct 31, 2023',
+                        data: [1500, 1800, 1600, 1700],
+                        borderColor: '#ff7f0e',
+                        backgroundColor: 'rgba(255, 127, 14, 0.2)',
+                        fill: false,
+                        borderDash: [5, 5],
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Visitors'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Time'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    </script>
+    <script>
+        var ctx = document.getElementById('sessionsChart').getContext('2d');
+        var sessionsChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Nov 2023', 'Feb 2024', 'May 2024', 'Aug 2024'],
+                datasets: [
+                    {
+                        label: 'Nov 1, 2023 - Oct 31, 2024',
+                        data: [1000, 1200, 1500, 1700],
+                        borderColor: '#1f77b4',
+                        backgroundColor: 'rgba(31, 119, 180, 0.2)',
+                        fill: false,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Nov 1, 2022 - Oct 31, 2023',
+                        data: [800, 900, 850, 950],
+                        borderColor: '#ff7f0e',
+                        backgroundColor: 'rgba(255, 127, 14, 0.2)',
+                        fill: false,
+                        borderDash: [5, 5],
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Sessions'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Time'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    </script>
+
+    <script>
+        // Animate bars on load
+        const bars = document.querySelectorAll('.bar');
+        bars.forEach((bar, index) => {
+            const height = bar.getAttribute('height');
+            bar.setAttribute('height', 0); // Start with height 0
+            setTimeout(() => {
+                bar.setAttribute('height', height); // Animate to full height
+                bar.style.opacity = 1; // Fade in
+            }, index * 300); // Stagger the animations
+        });
+    </script>
+
+    <div class="container mt-5">
+        <h4 class="text-center">Total Sales</h4>
+        <div class="chart-container">
+            <canvas id="totalSalesChart"></canvas>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <h4 class="text-center">Online Store Sessions</h4>
+        <div class="chart-container">
+            <canvas id="onlineStoreSessionsChart"></canvas>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Total Sales Chart
+        var ctxTotalSales = document.getElementById('totalSalesChart').getContext('2d');
+        var totalSalesChart = new Chart(ctxTotalSales, {
+            type: 'bar',
+            data: {
+                labels: ['Online Store', 'In-Store', 'Wholesale'],
+                datasets: [{
+                    label: 'Total Sales',
+                    data: [7725.67, 5000, 3000], // Dummy data
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(75, 192, 192, 1)'
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(75, 192, 192, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Sales ($)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Sales Channels'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true
+                    }
+                }
+            }
         });
 
         // Online Store Sessions Chart
-        new Chart(document.getElementById('sessionsChart'), {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [
-                    {
-                        label: 'Current Period',
-                        data: [55, 49, 25, 15, 30, 20],
-                        borderColor: 'rgb(53, 162, 235)',
-                        backgroundColor: 'rgba(53, 162, 235, 0.5)',
-                    },
-                    {
-                        label: 'Previous Period',
-                        data: [25, 15, 30, 10, 45, 55],
-                        borderColor: 'rgb(53, 162, 235)',
-                        backgroundColor: 'rgba(53, 162, 235, 0.5)',
-                        borderDash: [5, 5],
-                    },
-                ],
-            },
-            options: lineOptions,
-        });
-
-        // Sales by Channel Chart
-        new Chart(document.getElementById('salesChannelChart'), {
+        var ctxOnlineSessions = document.getElementById('onlineStoreSessionsChart').getContext('2d');
+        var onlineStoreSessionsChart = new Chart(ctxOnlineSessions, {
             type: 'bar',
             data: {
-                labels: ['Channel 1', 'Channel 2'],
-                datasets: [
-                    {
-                        data: [60, 90],
-                        backgroundColor: ['rgb(53, 162, 235)', 'rgb(75, 192, 192)'],
-                    },
-                ],
+                labels: ['Nov 2023', 'Dec 2023', 'Jan 2024'],
+                datasets: [{
+                    label: 'Online Store Sessions',
+                    data: [54196, 60000, 65000], // Dummy data
+                    backgroundColor: [
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
             },
-            options: barOptions,
-        });
-
-        // Total Sales Chart
-        new Chart(document.getElementById('totalSalesChart'), {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [
-                    {
-                        label: 'Current Period',
-                        data: [8, 10, 40, 2, 20, 8],
-                        borderColor: 'rgb(53, 162, 235)',
-                        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Sessions'
+                        }
                     },
-                    {
-                        label: 'Previous Period',
-                        data: [10, 8, 12, 15, 25, 0],
-                        borderColor: 'rgb(53, 162, 235)',
-                        backgroundColor: 'rgba(53, 162, 235, 0.5)',
-                        borderDash: [5, 5],
-                    },
-                ],
-            },
-            options: lineOptions,
-        });
-
-        // Average Order Value Chart
-        new Chart(document.getElementById('avgOrderChart'), {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [
-                    {
-                        label: 'Current Period',
-                        data: [0, 0, 50, 0, 0, 0],
-                        borderColor: 'rgb(53, 162, 235)',
-                        backgroundColor: 'rgba(53, 162, 235, 0.5)',
-                    },
-                    {
-                        label: 'Previous Period',
-                        data: [0, 0, 20, 0, 25, 0],
-                        borderColor: 'rgb(53, 162, 235)',
-                        backgroundColor: 'rgba(53, 162, 235, 0.5)',
-                        borderDash: [5, 5],
-                    },
-                ],
-            },
-            options: lineOptions,
-        });
-
-        // Initialize Bootstrap tooltips
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Months'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true
+                    }
+                }
+            }
         });
     </script>
+
 </body>
 </html>
